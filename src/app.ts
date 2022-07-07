@@ -1,13 +1,46 @@
-import express from "express";
-import { graphqlHTTP } from "express-graphql";
+import { resolve } from 'path';
+import { createServer } from '@graphql-yoga/node';
 
-const app = express() ; 
+let messages:any[] = [] ;
 
-app.use('/graphql', graphqlHTTP({
-    schema, 
-    graphiql: true
-}))
+const typeDefs = `
+    type Message {
+        id: ID!
+        user: String!
+        content: String!
+    }
+    type Query {
+        messages: [Message!]
+    }
+    type Mutation{
+        postMessage(user: String!, content: String!): ID!
+    }
+`;
 
-app.listen(5000, () => {
-    console.log('Server is listening on port 5000');
+const resolvers = {
+    Query: {
+        messages: () => messages, 
+    },
+    Mutation: {
+        postMessage:(_parent : any, {user, content}:any) => {
+            const id = messages.length ;
+            messages.push({
+                id, 
+                user, 
+                content
+            })
+            return id ; 
+        }
+    }
+}
+
+
+// Create your server
+const server = createServer({
+    schema: {
+        typeDefs,
+        resolvers
+    }
 })
+// start the server and explore http://localhost:4000/graphql
+server.start()
