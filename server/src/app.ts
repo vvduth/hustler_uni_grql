@@ -2,12 +2,13 @@ import path from "path";
 import express from "express";
 import http from 'http' ;
 import { Server } from "socket.io";
+import formatMessage from "./utils/messages";
 
 
 const app = express() ; 
 const server = http.createServer(app) ;
 const io = new Server(server);
-
+const botName = 'Admin'
 // set the sttatic folders
 app.use(express.static(path.join(__dirname, '../client'))) ;
 
@@ -17,14 +18,14 @@ io.on('connection', socket => {
     console.log("New websocket connection");
 
     // Welcome current user
-    socket.emit('message', 'Welcome to Hustler University!')
+    socket.emit('message', formatMessage(botName, 'Welcome to Hustler University!'))
 
     // Broadcast when user connect
-    socket.broadcast.emit('message', 'A user has joined the chat');
+    socket.broadcast.emit('message', formatMessage(botName,'A user has joined the chat'));
 
     // Runs left client disconnects
     socket.on('disconnect', () => {
-        io.emit('message', 'A user has left the chat')
+        io.emit('message', formatMessage(botName,'A user has left the chat'))
     });
 
     // Listen for chat message
