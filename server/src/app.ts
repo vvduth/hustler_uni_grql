@@ -3,8 +3,12 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import formatMessage from "./utils/messages";
-import { userJoin, getCurrentUser } from "./utils/users";
-
+import {
+  userJoin,
+  getCurrentUser,
+  userLeaves,
+  getRoomUser,
+} from "./utils/users";
 
 const app = express();
 const server = http.createServer(app);
@@ -19,9 +23,8 @@ io.on("connection", (socket) => {
 
   // Join room
   socket.on("joinRoom", ({ username, room }) => {
-    
-    const user = userJoin(socket.id , username, room ) ;
-    socket.join(user.room) ; 
+    const user = userJoin(socket.id, username, room);
+    socket.join(user.room);
 
     // Welcome current user
     socket.emit(
@@ -30,21 +33,42 @@ io.on("connection", (socket) => {
     );
 
     // Broadcast when user connect
-    socket.broadcast.to(user.room).emit(
-      "message",
-      formatMessage(botName, "A user has joined the chat")
-    );
+    socket.broadcast
+      .to(user.room)
+      .emit(
+        "message",
+        formatMessage(botName, `${user.username} user has joined the chat`)
+      );
+
+    // send user room infor
+    io.to(user.room).emit("roomUsers", {
+      room: user.room,
+      users: getRoomUser(user.room),
+    });
   });
 
   // Listen for chat message
   socket.on("chatMessage", (msg) => {
+    const user = getCurrentUser(socket.id);
+
     // emit to everyone on the client side inthe chat room
-    io.emit("message", formatMessage("USER", msg));
+    io.to(user.room).emit("message", formatMessage(user.username, msg));
   });
 
   // Runs left client disconnects
   socket.on("disconnect", () => {
-    io.emit("message", formatMessage(botName, "A user has left the chat"));
+    const user = userLeaves(socket.id);
+    if (user) {
+      io.to(user.room).emit(
+        "message",
+        formatMessage(botName, `${user.username} has left the chat`)
+      );
+
+      io.to(user.room).emit("roomUsers", {
+        room: user.room,
+        users: getRoomUser(user.room),
+      });
+    }
   });
 });
 
