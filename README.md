@@ -1,4 +1,4 @@
-# HustleCord 
+# HustleCord (Upgrading)
 
 ## A low-key simple chat app, inspired by Discord and hustle University 
 * Tech stack: Node JS, Express, socket.io
