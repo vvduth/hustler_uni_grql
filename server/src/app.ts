@@ -4,13 +4,25 @@ import http from "http";
 import { Server } from "socket.io";
 import express, { Request, Response, NextFunction } from "express"
 import dotenv from 'dotenv'
+import connectDB from "./config/db";
+
+const rooms =['general', 'football', 'gym', 'crypto', 'tech']
 
 
 dotenv.config()
+connectDB() ; 
 
 const app = express();
+app.use(express.json() )
 const server = http.createServer(app);
-const io = new Server(server);
+
+const io = new Server(server ,{
+  cors: {
+    origin: 'http://localhost:3000/',
+    methods: ['GET', 'POST']
+  }
+
+});
 
 // set the sttatic folders
 
