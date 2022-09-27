@@ -5,6 +5,8 @@ import { Server } from "socket.io";
 import express, { Request, Response, NextFunction } from "express"
 import dotenv from 'dotenv'
 import connectDB from "./config/db";
+import {notFound, ErrorHandler} from './middlewares/errorHandler'
+import userRoutes from './routers/userRoutes'
 
 const rooms =['general', 'football', 'gym', 'crypto', 'tech']
 
@@ -13,7 +15,7 @@ dotenv.config()
 connectDB() ; 
 
 const app = express();
-app.use(express.json() )
+
 const server = http.createServer(app);
 
 const io = new Server(server ,{
@@ -23,14 +25,12 @@ const io = new Server(server ,{
   }
 
 });
-
-// set the sttatic folders
-
-
-// run when client connects
+app.use(express.json() )
+app.use('/api/users', userRoutes)
 
 
-const PORT = 80 || process.env.PORT;
+
+const PORT = 5000 || process.env.PORT;
 
 server.listen(PORT, () => {
   console.log(`Server listening to port ${PORT}`);
