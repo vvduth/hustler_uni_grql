@@ -2,8 +2,15 @@ import React from "react";
 import { Nav, Navbar, Container, Button, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import pukedukelogo from "../assets/pukedukelogo.png";
+import useAuthStore from "../store/authStore";
 
 const Navigation = () => {
+
+  const {userProfile, removeUser} = useAuthStore() as any ; 
+  const logoutHandler = (e:any) => {
+    e.preventDefault() ; 
+    removeUser() ; 
+  }
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -19,9 +26,16 @@ const Navigation = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <LinkContainer to="/login">
+            {!userProfile ? (
+              <LinkContainer to="/login">
               <Nav.Link>Login</Nav.Link>
             </LinkContainer>
+            ) : (
+              <LinkContainer to="/">
+              <Nav.Link> Hello {userProfile.name}</Nav.Link>
+            </LinkContainer>
+              
+            )}
 
             <LinkContainer to="/chat">
               <Nav.Link>Chat</Nav.Link>
@@ -42,11 +56,19 @@ const Navigation = () => {
               </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
 
-              <NavDropdown.Item>
-                <Button variant="danger" onClick={() => {}}>
+              {userProfile ? (
+                <NavDropdown.Item>
+                <Button variant="danger" onClick={logoutHandler}>
                   Logout
                 </Button>
               </NavDropdown.Item>
+              ) : (
+                <NavDropdown.Item>
+                <Button variant="green" onClick={logoutHandler}>
+                  Login
+                </Button>
+              </NavDropdown.Item>
+              )}
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

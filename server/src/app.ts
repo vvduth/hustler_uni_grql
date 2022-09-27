@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import connectDB from "./config/db";
 import {notFound, ErrorHandler} from './middlewares/errorHandler'
 import userRoutes from './routers/userRoutes'
+import cors from "cors";
 
 const rooms =['general', 'football', 'gym', 'crypto', 'tech']
 
@@ -26,6 +27,12 @@ const io = new Server(server ,{
 
 });
 app.use(express.json() )
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 app.use('/api/users', userRoutes)
 
 
