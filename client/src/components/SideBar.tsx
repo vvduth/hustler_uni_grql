@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { Col, ListGroup, Row } from "react-bootstrap";
 import { AppContext } from "../context/appContext";
 import useAuthStore from "../store/authStore";
+import { IUser } from "../type/types";
 
 import "./SideBar.css";
 
@@ -92,9 +93,9 @@ const SideBar = () => {
         ))}
       </ListGroup>
       <h2>Members</h2>
-      {members.map((member: any) => (
+      {members.map((member: IUser) => (
         <ListGroup.Item
-          key={member.id}
+          key={member._id}
           style={{ cursor: "pointer" }}
           active={privateMemberMsg?._id === member?._id}
           onClick={() => handlePrivateMemberMsg(member)}
@@ -113,11 +114,19 @@ const SideBar = () => {
               {member.name}
               {member._id === userProfile?._id && " (You)"}
               {member.status === "offline" && " (Offline)"}
+              {member.status === "online" && " (active)"}
+              {}
+              {
+                member._id !== userProfile._id && (
+                  <button className="btn-chat">Chat</button>
+                )
+              }
             </Col>
             <Col xs={1}>
-              {/* <span className="badge rounded-pill bg-primary">{user.newMessages[orderIds(member._id, user._id)]}</span> */}
+              
             </Col>
           </Row>
+          <br/>
         </ListGroup.Item>
       ))}
     </>

@@ -9,10 +9,12 @@ import Chat from "./pages/Chat";
 import { AppContext, socket } from "./context/appContext";
 import useAuthStore from "./store/authStore";
 import { useState } from "react";
+import { IUser } from "./type/types";
+
 function App() {
   const [rooms, setRooms] = useState([]);
   const [currentRoom, setCurrentRoom] = useState([]);
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<IUser[] | any[]>([]);
   const [messages, setMessages] = useState([]);
   const [privateMemberMsg, setPrivateMemberMsg] = useState({});
   const [newMessages, setNewMessages] = useState({});

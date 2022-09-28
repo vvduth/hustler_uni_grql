@@ -11,7 +11,18 @@ import cors from "cors";
 import User from "./models/userModel";
 import Message from "./models/messageModel";
 
+export interface IUserBackEnd {
+  _id: string,
+  name: string, 
+  email: string, 
+  isAdmin?: boolean,
+  status?: "online" | "offline" ,
+  token: string , 
+  save: () =>any
+}
+
 const rooms =['general', 'football', 'gym', 'crypto', 'tech']
+
 
 async function getLastMessagesFromRoom(room:any){
   let roomMessages = await Message.aggregate([
@@ -81,6 +92,27 @@ io.on('connection', (socket)=> {
     // sending message to room
     io.to(room).emit('room-messages', roomMessages);
     socket.broadcast.emit('notifications', room)
+  })
+
+  app.delete('/logout',async (req, res) => {
+    try {
+
+      // switch status offline
+      const {_id} = req.body ;
+      const user  = await User.findById(_id)  as IUserBackEnd; 
+      user.status = "offline"  ; 
+      await user.save() ;
+      
+      // send a new member list with update statsu to other online users
+      const members = await User.find() as IUserBackEnd[];
+      socket.broadcast.emit('new-user', members) ; 
+      res.status(200).send() ;  
+      
+    } catch (e) {
+      console.log(e);
+      res.status(400).send()
+    }
+    
   })
 })
 

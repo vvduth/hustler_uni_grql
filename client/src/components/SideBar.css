@@ -4,7 +4,12 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
+.btn-chat {
+    display: flex;
+    border-radius: 20%;
+    background-color: #554505;
+    color: white;
+}
 .member-status {
     margin-bottom: 0;
     position: relative;

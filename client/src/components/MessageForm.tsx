@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import useAuthStore from "../store/authStore";
 import { AppContext } from "../context/appContext";
+import {IoIosPaperPlane} from 'react-icons/io'
 import "./MessageForm.css";
 const MessageForm = () => {
   const { userProfile } = useAuthStore() as any;
@@ -137,7 +138,7 @@ const MessageForm = () => {
               style={{ width: "100%", backgroundColor: "orange" }}
               disabled={!userProfile}
             >
-              <i className="fas fa-paper-plane">Send it bro</i>
+              <IoIosPaperPlane /> 
             </Button>
           </Col>
         </Row>

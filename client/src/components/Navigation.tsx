@@ -3,14 +3,24 @@ import { Nav, Navbar, Container, Button, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import pukedukelogo from "../assets/pukedukelogo.png";
 import useAuthStore from "../store/authStore";
+import axios from "axios";
 
+export const URL = `http://localhost:5000`;
 const Navigation = () => {
-
-  const {userProfile, removeUser} = useAuthStore() as any ; 
-  const logoutHandler = (e:any) => {
-    e.preventDefault() ; 
-    removeUser() ; 
-  }
+  const { userProfile, removeUser } = useAuthStore() as any;
+  const logoutHandler = async (e: any) => {
+    e.preventDefault();
+    
+    const headers = {
+      "Content-Type": "application/json",
+    }
+    const data = {
+      _id: userProfile._id
+    }
+    
+    await axios.delete(`${URL}/logout`, {headers, data });
+    removeUser();
+  };
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -28,13 +38,12 @@ const Navigation = () => {
           <Nav className="ms-auto">
             {!userProfile ? (
               <LinkContainer to="/login">
-              <Nav.Link>Login</Nav.Link>
-            </LinkContainer>
+                <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
             ) : (
               <LinkContainer to="/">
-              <Nav.Link> Hello {userProfile.name}</Nav.Link>
-            </LinkContainer>
-              
+                <Nav.Link> Hello {userProfile.name}</Nav.Link>
+              </LinkContainer>
             )}
 
             <LinkContainer to="/chat">
@@ -58,16 +67,16 @@ const Navigation = () => {
 
               {userProfile ? (
                 <NavDropdown.Item>
-                <Button variant="danger" onClick={logoutHandler}>
-                  Logout
-                </Button>
-              </NavDropdown.Item>
+                  <Button variant="danger" onClick={logoutHandler}>
+                    Logout
+                  </Button>
+                </NavDropdown.Item>
               ) : (
                 <NavDropdown.Item>
-                <Button variant="green" onClick={logoutHandler}>
-                  Login
-                </Button>
-              </NavDropdown.Item>
+                  <Button variant="green" onClick={logoutHandler}>
+                    Login
+                  </Button>
+                </NavDropdown.Item>
               )}
             </NavDropdown>
           </Nav>
