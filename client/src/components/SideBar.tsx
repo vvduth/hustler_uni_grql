@@ -59,10 +59,12 @@ const SideBar = () => {
     }
   }, []);
 
-  socket.off("new-user").on("new-user", (payload:any) => {
-    console.log(payload)
+  socket.off("new-user").on("new-user", (payload: any) => {
+    //console.log(payload);
     setMembers(payload);
-});
+  });
+
+  
 
   if (!userProfile) {
     return <></>;
@@ -92,6 +94,7 @@ const SideBar = () => {
           </ListGroup.Item>
         ))}
       </ListGroup>
+      <br />
       <h2>Members</h2>
       {members.map((member: IUser) => (
         <ListGroup.Item
@@ -103,7 +106,11 @@ const SideBar = () => {
         >
           <Row>
             <Col xs={2} className="member-status">
-              <img src={"https://source.unsplash.com/1600x900/?football"} alt="prfile-pic" className="member-status-img" />
+              <img
+                src={"https://source.unsplash.com/1600x900/?football"}
+                alt="prfile-pic"
+                className="member-status-img"
+              />
               {member.status === "online" ? (
                 <i className="fas fa-circle sidebar-online-status"></i>
               ) : (
@@ -116,17 +123,13 @@ const SideBar = () => {
               {member.status === "offline" && " (Offline)"}
               {member.status === "online" && " (active)"}
               {}
-              {
-                member._id !== userProfile._id && (
-                  <button className="btn-chat">Chat</button>
-                )
-              }
+              {member._id !== userProfile._id && (
+                <button className="btn-chat">Chat</button>
+              )}
             </Col>
-            <Col xs={1}>
-              
-            </Col>
+            <Col xs={1}></Col>
           </Row>
-          <br/>
+          <br />
         </ListGroup.Item>
       ))}
     </>
