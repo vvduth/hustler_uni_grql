@@ -6,20 +6,35 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Chat from "./pages/Chat";
-
+import { AppContext, socket } from "./context/appContext";
+import useAuthStore from "./store/authStore";
+import { useState } from "react";
 function App() {
+  const [rooms, setRooms] = useState([]);
+  const [currentRoom, setCurrentRoom] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [privateMemberMsg, setPrivateMemberMsg] = useState({});
+  const [newMessages, setNewMessages] = useState({});
+  const {userProfile} = useAuthStore() as any ;
   return (
-    <BrowserRouter>
+    <AppContext.Provider value={{ socket, currentRoom, setCurrentRoom, members, setMembers, messages, setMessages, privateMemberMsg, setPrivateMemberMsg, rooms, setRooms, newMessages, setNewMessages }}>
+      <BrowserRouter>
       <Navigation />
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        {!userProfile && (
+                        <>
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/signup" element={<Signup />} />
+                        </>
+                    )}
 
         <Route path="/chat" element={<Chat />} />
       </Routes>
     </BrowserRouter>
+    </AppContext.Provider>
   );
 }
 

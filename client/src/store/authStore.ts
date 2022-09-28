@@ -1,6 +1,7 @@
 import React from 'react' 
 import create from 'zustand'
 import {persist} from 'zustand/middleware'
+import {io} from 'socket.io-client'
 
 
 const authStore = (set: any) => ({
