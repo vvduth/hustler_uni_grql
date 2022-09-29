@@ -28,9 +28,6 @@ const SideBar = () => {
       socket.emit("leave-room", currentRoom, userProfile.name)
     }
     socket.emit("join-room", room, currentRoom, userProfile.name);
-    // if (currentRoom) {
-    //   socket.broadcast("leave-room", currentRoom, userProfile.name)
-    // }
     
     setCurrentRoom(room);
 
@@ -107,8 +104,9 @@ const SideBar = () => {
       {members.map((member: IUser) => (
         <ListGroup.Item
           key={member._id}
-          style={{ cursor: "pointer" }}
+         
           active={privateMemberMsg?._id === member?._id}
+          className="member-card"
           onClick={() => handlePrivateMemberMsg(member)}
           disabled={member._id === userProfile._id}
         >

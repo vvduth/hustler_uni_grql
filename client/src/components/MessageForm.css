@@ -19,6 +19,12 @@
     background-color: #d1e7dd;
 }
 
+.send-msg-btn{
+    justify-content: center;
+    align-items: center;
+    width: "100%"; 
+    background-color: orange;
+}
 .incoming-message .message-inner {
     background-color: #ffdab9;
 }

@@ -128,10 +128,10 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("leave-room", async (room , username) => {
-    console.log("socket emit dis")
+   
 
     if (room.length < 11) {
-      console.log("socket cme this far, room legnth > 11")
+      
       console.log(room)
       let bot_notification: IMessageBackEnd = {
         content: `${username} has left ${room}`,

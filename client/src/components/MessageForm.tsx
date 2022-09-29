@@ -54,7 +54,7 @@ const MessageForm = () => {
       <div className="messages-output">
         {userProfile && !privateMemberMsg?._id && (
           <div className="alert alert-info">
-            You are in the {currentRoom} room
+            Welcome to chat app {currentRoom.length > 0  ? (<>you are in {currentRoom}</>): (<>Join a room or start a DM</>)}
           </div>
         )}
         {userProfile && privateMemberMsg?._id && (
@@ -135,7 +135,7 @@ const MessageForm = () => {
             <Button
               variant="primary"
               type="submit"
-              style={{ width: "100%", backgroundColor: "orange" }}
+              className="send-msg-btn"
               disabled={!userProfile}
             >
               <IoIosPaperPlane /> 
