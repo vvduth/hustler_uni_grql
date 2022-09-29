@@ -1,8 +1,21 @@
-# HustleCord (Upgrading to v2)
+# HustleCord 
 
 ## A low-key simple chat app, inspired by Discord and hustle University 
-* Tech stack: Node JS, Express, socket.io
-* Deploy: Docker, AWS service (EC2 instance)
-* Go check it out real quick [HustleCord v1](http://13.48.25.164/)
+* Tech stack: MERN (MongoDB, React , Node JS, Express) and Socket.io
+* UI: Bootstrap
 
-* I am developing a better chat app, the version 2 of this HustleCord whilt keep v1 running and accessible
+# Feature
+* Users authentication and authorization
+* Common chat rooms with different topics
+* Private direct messages with another users 
+* Active status
+
+![pic1](chat1.png) 
+
+
+# Deploy:
+* Backend: Heroku
+* Frontend: Netlify
+* Check out the new app [here](https://lustrous-cannoli-1419e7.netlify.app/) 
+
+![pic2](chat3.png) 
