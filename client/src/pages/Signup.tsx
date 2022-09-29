@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
 import axios from 'axios'
 import { Link, useNavigate } from "react-router-dom";
+import { BACKEND } from "../url";
 import useAuthStore from "../store/authStore";
 import "./Signup.css";
 
@@ -24,7 +25,7 @@ const Signup = () => {
     };
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/users`,
+        `${BACKEND}/api/users`,
         { email,name, password },
         config
       );

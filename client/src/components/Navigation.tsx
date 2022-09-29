@@ -4,8 +4,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import pukedukelogo from "../assets/pukedukelogo.png";
 import useAuthStore from "../store/authStore";
 import axios from "axios";
+import { BACKEND } from "../url";
 
-export const URL = `http://localhost:5000`;
 const Navigation = () => {
   const { userProfile, removeUser } = useAuthStore() as any;
   const logoutHandler = async (e: any) => {
@@ -18,7 +18,7 @@ const Navigation = () => {
       _id: userProfile._id,
     };
 
-    await axios.delete(`${URL}/logout`, { headers, data });
+    await axios.delete(`${BACKEND}/logout`, { headers, data });
     removeUser();
   };
   return (

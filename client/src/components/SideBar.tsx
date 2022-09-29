@@ -3,7 +3,7 @@ import { Col, ListGroup, Row } from "react-bootstrap";
 import { AppContext } from "../context/appContext";
 import useAuthStore from "../store/authStore";
 import { IUser } from "../type/types";
-
+import { BACKEND } from "../url";
 import "./SideBar.css";
 
 const SideBar = () => {
@@ -36,7 +36,7 @@ const SideBar = () => {
     }
   };
   const getRooms = () => {
-    fetch("http://localhost:5000/api/rooms")
+    fetch(`${BACKEND}/api/rooms`)
       .then((res) => res.json())
       .then((data) => setRooms(data));
   };
