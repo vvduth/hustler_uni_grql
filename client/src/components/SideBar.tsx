@@ -24,7 +24,14 @@ const SideBar = () => {
     if (!userProfile) {
       return alert("Please login");
     }
-    socket.emit("join-room", room, currentRoom);
+    if (currentRoom && currentRoom.length >  0 ) {
+      socket.emit("leave-room", currentRoom, userProfile.name)
+    }
+    socket.emit("join-room", room, currentRoom, userProfile.name);
+    // if (currentRoom) {
+    //   socket.broadcast("leave-room", currentRoom, userProfile.name)
+    // }
+    
     setCurrentRoom(room);
 
     if (isPublic) {
@@ -52,9 +59,10 @@ const SideBar = () => {
 
   useEffect(() => {
     if (userProfile) {
-      setCurrentRoom("general");
+      //setCurrentRoom("general");
       getRooms();
-      socket.emit("join-room", "general");
+      //socket.emit("join-room", "general",undefined, userProfile.name);
+      
       socket.emit("new-user");
     }
   }, []);

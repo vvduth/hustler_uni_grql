@@ -10,6 +10,7 @@ import userRoutes from "./routers/userRoutes";
 import cors from "cors";
 import User from "./models/userModel";
 import Message from "./models/messageModel";
+import { getFormatTime, getFormattedDate } from "./utils/formaDateAndTime";
 
 export interface IUserBackEnd {
   _id: string;
@@ -22,13 +23,19 @@ export interface IUserBackEnd {
 }
 
 export interface IMessageBackEnd {
-  _id: string;
+  _id?: string;
   content: string;
   from: IUserBackEnd | any;
   time: string;
   date: string;
   to: string;
 }
+
+const BOT = {
+  _id: "123bot",
+  name: "CHAT_BOT",
+  email: "bot@email.com",
+};
 
 const rooms = ["general", "football", "gym", "crypto", "tech"];
 
@@ -40,7 +47,7 @@ async function getLastMessagesFromRoom(room: any) {
   return roomMessages;
 }
 
-function sortRoomMessagesByDate(messages: IMessageBackEnd[]) {
+function sortRoomMessagesByDate(messages: IMessageBackEnd[] | any[]) {
   return messages.sort(function (a: any, b: any) {
     let date1 = a._id.split("/");
     let date2 = b._id.split("/");
@@ -83,20 +90,74 @@ io.on("connection", (socket) => {
   });
 
   // will work with both rooms chat and private dm
-  socket.on("join-room", async (newRoom, previousRoom) => {
+  socket.on("join-room", async (newRoom, previousRoom, username?) => {
     socket.join(newRoom);
     socket.leave(previousRoom);
-    console.log(newRoom, "  ",previousRoom)
-    socket.broadcast.emit('message', `New user joined  ${newRoom}`)
     
-    let roomMessages = await getLastMessagesFromRoom(newRoom);
-    roomMessages = sortRoomMessagesByDate(roomMessages);
-    socket.emit("room-messages", roomMessages);
-  });
 
+    if (newRoom.length <= 11) {
+      // notification mess that a new user join
+      let bot_notification: IMessageBackEnd = {
+        content: `${username} has join new ${newRoom}`,
+        from: BOT,
+        time: getFormatTime(),
+        date: getFormattedDate(),
+        to: `${newRoom}`,
+      };
+
+      // save mess in datase
+      await Message.create(bot_notification);
+
+      // retrive all database of the new room
+      let roomMessages = await getLastMessagesFromRoom(newRoom);
+
+      roomMessages = sortRoomMessagesByDate(roomMessages);
+
+      // render all messages
+      socket.emit("room-messages", roomMessages);
+
+      io.to(newRoom).emit("room-messages", roomMessages);
+    } else {
+      // retrive all database of the new room
+      let roomMessages = await getLastMessagesFromRoom(newRoom);
+
+      roomMessages = sortRoomMessagesByDate(roomMessages);
+
+      // render all messages
+      socket.emit("room-messages", roomMessages);
+    }
+  });
+  socket.on("leave-room", async (room , username) => {
+    console.log("socket emit dis")
+
+    if (room.length < 11) {
+      console.log("socket cme this far, room legnth > 11")
+      console.log(room)
+      let bot_notification: IMessageBackEnd = {
+        content: `${username} has left ${room}`,
+        from: BOT,
+        time: getFormatTime(),
+        date: getFormattedDate(),
+        to: `${room}`,
+      };
+
+      // save mess in datase
+      await Message.create(bot_notification);
+
+      // retrive all database of the new room
+      let roomMessages = await getLastMessagesFromRoom(room);
+
+      roomMessages = sortRoomMessagesByDate(roomMessages);
+
+      // render all messages
+      socket.emit("room-messages", roomMessages);
+
+      // send noti to all other users i the old room , not you
+      io.to(room).emit("room-messages", roomMessages);
+    }
+  })
   socket.on("message-room", async (room, content, sender, time, date) => {
-    
-    console.log("room: ", room)
+    console.log("room: ", room);
     // create and save to mess tinto the database
     const newMessage = await Message.create({
       content,
