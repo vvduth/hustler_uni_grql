@@ -1,10 +1,14 @@
 import mongoose, { ConnectOptions } from "mongoose";
+import dotenv from 'dotenv'
 
-const URL = 'mongodb+srv://admin:tgp-k6Mzh9Xj2FM@cluster0.qj4e7sn.mongodb.net/chat-data?retryWrites=true&w=majority'; 
+dotenv.config() 
+
+
+const URL_DEPLOY = process.env.MONGO_URI as string; 
 const connectDB = async () => {
-    console.log("url :" ,URL)
+    console.log("url :" ,URL_DEPLOY)
     try {
-        const conn = await mongoose.connect(URL , {
+        const conn = await mongoose.connect(URL_DEPLOY , {
             useUnifiedTopology: true, 
             useNewUrlParser: true,
             

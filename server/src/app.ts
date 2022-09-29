@@ -132,7 +132,7 @@ io.on("connection", (socket) => {
 
     if (room.length < 11) {
       
-      console.log(room)
+      
       let bot_notification: IMessageBackEnd = {
         content: `${username} has left ${room}`,
         from: BOT,
@@ -157,7 +157,7 @@ io.on("connection", (socket) => {
     }
   })
   socket.on("message-room", async (room, content, sender, time, date) => {
-    console.log("room: ", room);
+    
     // create and save to mess tinto the database
     const newMessage = await Message.create({
       content,
@@ -197,7 +197,7 @@ io.on("connection", (socket) => {
 app.get("/api/rooms", (req, res) => {
   res.json(rooms);
 });
-const PORT = 5000 || process.env.PORT;
+const PORT =  process.env.PORT || 5000 ;
 
 server.listen(PORT, () => {
   console.log(`Server listening to port ${PORT}`);
