@@ -196,6 +196,7 @@ io.on("connection", (socket) => {
 
 app.get("/api/rooms", (req, res) => {
   res.json(rooms);
+  //dsadasds
 });
 const PORT =  process.env.PORT || 5000 ;
 
