@@ -1,21 +1,40 @@
 import React, { useState } from "react";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
-
+import axios from 'axios'
 import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../store/authStore";
 import "./Signup.css";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const {addUser} = useAuthStore() ; 
   
   const navigate = useNavigate();
   //image upload states
-  const [image, setImage] = useState(null);
-  const [upladingImg, setUploadingImg] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
+  
 
-  const handleSignup = () => {};
+  const handleSignup = async (e:any) => {
+    e.preventDefault();
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/users`,
+        { email,name, password },
+        config
+      );
+      console.log(response.data) ; 
+      addUser(response.data) ; 
+      navigate("/chat", { replace: true });
+    } catch (e) {
+      console.log("Can not register", e);
+    }
+  };
   return (
     <Container>
       <Row>

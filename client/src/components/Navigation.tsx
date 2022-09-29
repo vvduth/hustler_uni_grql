@@ -10,15 +10,15 @@ const Navigation = () => {
   const { userProfile, removeUser } = useAuthStore() as any;
   const logoutHandler = async (e: any) => {
     e.preventDefault();
-    
+
     const headers = {
       "Content-Type": "application/json",
-    }
+    };
     const data = {
-      _id: userProfile._id
-    }
-    
-    await axios.delete(`${URL}/logout`, {headers, data });
+      _id: userProfile._id,
+    };
+
+    await axios.delete(`${URL}/logout`, { headers, data });
     removeUser();
   };
   return (
@@ -37,9 +37,15 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             {!userProfile ? (
-              <LinkContainer to="/login">
-                <Nav.Link>Login</Nav.Link>
-              </LinkContainer>
+              <>
+                <LinkContainer to="/login">
+                  <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+
+                <LinkContainer to="/signup">
+                  <Nav.Link>Sign up</Nav.Link>
+                </LinkContainer>
+              </>
             ) : (
               <LinkContainer to="/">
                 <Nav.Link> Hello {userProfile.name}</Nav.Link>
